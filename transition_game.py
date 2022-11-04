@@ -2,43 +2,52 @@ import random
 import math
 
 # 定義部分
-def random_int(min, max):
-    return random.randrange(min, max)
+def generate_position(size):
+    x = random.randrange(0, 5)
+    y = random.randrange(0, 5)
 
-def calculation_distance(x1, y1, x2, y2):
+    return (x, y)
+
+def calculation_distance(position1, position2):
     # 二点間の距離を求める
-    diff_x = x1 - x2
-    diff_y = y1 - y2
+    diff_x = position1[0] - position2[0]
+    diff_y = position1[1] - position2[1]
     return math.sqrt(diff_x**2 + diff_y**2)
 
-min = 0
-max = 5
+def move_position(direction, position):
+    current_x, current_y = position
 
-waterMelon_x = random_int(min, max)
-waterMelon_y = random_int(min, max)
+    match user_input:
+        case "n":
+            current_y = current_y - 1
+        case "s":
+            current_y = current_y + 1
+        case "e":
+            current_x = current_x - 1
+        case "w":
+            current_x = current_x + 1
 
-player_x = random_int(min, max)
-player_y = random_int(min, max)
+    return (current_x, current_y)
+
+BAORD_SIZE = 5
+
+watermelon_position = generate_position(BAORD_SIZE)
+print("スイカ初期位置：", watermelon_position)
+
+player_position = generate_position(BAORD_SIZE)
+print("プレイヤー初期位置：", player_position)
 
 # 実装部分
 
-while (waterMelon_x, waterMelon_y) == (player_x, player_y):
-    player_x = random_int(min, max)
-    player_y = random_int(min, max)
+while watermelon_position == player_position:
+    player_position = generate_position(BAORD_SIZE)
+    print("スイカと同じ位置だったので、プレイヤーの場所を変更しました：", watermelon_position)
 
-while (waterMelon_x != player_x) or (waterMelon_y != player_y):
-    distance = calculation_distance(player_x, player_y, waterMelon_x, waterMelon_y)
+while watermelon_position != player_position:
+    distance = calculation_distance(player_position, watermelon_position)
     print("スイカまでの距離:", distance)
 
     user_input = input("n:北に移動 s:南に移動 e:東に移動 w:西に移動")
-    match user_input:
-        case "n":
-            player_y = player_y - 1
-        case "s":
-            player_y = player_y + 1
-        case "e":
-            player_x = player_x - 1
-        case "w":
-            player_x = player_x + 1
+    player_position = move_position(user_input, player_position)
 
 print("スイカが割れました！！")
